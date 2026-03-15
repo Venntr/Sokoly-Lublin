@@ -2,41 +2,45 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background-color: #ffffff;
+        body { 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: #fff;
+            gap: 5px; /* Minimalny odstęp */
         }
-
-        .container {
-            width: 100vw;
-            height: 80vh;
+        .container { 
+            position: relative;
+            width: 100vw; 
+            padding-bottom: 56.25%; /* Proporcje 16:9 */
+            height: 0;
             overflow: hidden;
         }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        iframe { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            border: none; 
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html" allow="autoplay; fullscreen"></iframe>
     </div>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html" allow="autoplay; fullscreen"></iframe>
     </div>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html" allow="autoplay; fullscreen"></iframe>
     </div>
 
 </body>
