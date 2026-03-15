@@ -2,22 +2,22 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body { 
             margin: 0; 
             padding: 0; 
             display: flex; 
             flex-direction: column; 
-            background-color: #fff;
-            gap: 5px; /* Minimalny odstęp */
+            background-color: #000; /* Czarne tło niweluje błyski przy ładowaniu */
+            gap: 2px; 
         }
         .container { 
             position: relative;
             width: 100vw; 
             padding-bottom: 56.25%; /* Proporcje 16:9 */
             height: 0;
-            overflow: hidden;
+            background: #000;
         }
         iframe { 
             position: absolute;
@@ -32,15 +32,15 @@
 <body>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html" allow="autoplay; fullscreen"></iframe>
+        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCpP79986Vp6-pT_v0T3X7vA&autoplay=1" allow="autoplay; fullscreen"></iframe>
     </div>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html" allow="autoplay; fullscreen"></iframe>
+        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCpP79986Vp6-pT_v0T3X7vA&autoplay=1&mute=1" allow="autoplay; fullscreen"></iframe>
     </div>
 
     <div class="container">
-        <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html" allow="autoplay; fullscreen"></iframe>
+        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCpP79986Vp6-pT_v0T3X7vA&autoplay=1&mute=1" allow="autoplay; fullscreen"></iframe>
     </div>
 
 </body>
