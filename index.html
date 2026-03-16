@@ -1,203 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Podgląd Kamer - Sokół</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sokoły Lublin - Podgląd</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 5px; 
+            background-color: #f0f0f0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+            align-items: center;
+            font-family: sans-serif;
+        }
 
-<style>
-:root{
-  --gap:8px;
-  --bg:#ffffff;
-  --border:#d0d0d0;
-  --container-max-width:1200px;
-  --crop-scale:1.18;    /* dopasuj żeby "przyciąć" białe ramki */
-  --crop-y:-10%;        /* pionowe przesunięcie przycięcia (procentowe) */
-}
+        @media (min-width: 900px) {
+            body { flex-direction: row; flex-wrap: wrap; justify-content: center; padding-top: 40px; }
+            .container { width: 32vw; height: 18vw; }
+        }
 
-/* reset / layout */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  padding:12px;
-  background:var(--bg);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-}
+        @media (max-width: 899px) {
+            .container { width: 100vw; height: 56.25vw; }
+        }
 
-/* kontener z ograniczeniem szerokości */
-.wrapper{
-  width:100%;
-  max-width:var(--container-max-width);
-  display:flex;
-  gap:var(--gap);
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:flex-start;
-}
+        .container { 
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #333;
+            background: #000;
+            border-radius: 4px;
+        }
 
-/* kontener pojedynczego widoku */
-.cam {
-  position:relative;
-  overflow:hidden;
-  border:1px solid var(--border);
-  background:#000;
-  flex: 1 1 320px;        /* elastyczny rozmiar; min ~320px */
-  min-width:280px;
-  max-width: 420px;
-  aspect-ratio: 16 / 9;   /* nowoczesne, utrzymuje 16:9 */
-  display:block;
-  border-radius:6px;
-}
+        iframe { 
+            position: absolute;
+            top: -65px; /* Mniejsze wycięcie, by nie uciąć odtwarzacza */
+            left: 0;
+            width: 100%; 
+            height: calc(100% + 100px); 
+            border: none; 
+        }
 
-/* iframe jako "obraz" skalowany i przesunięty w procentach (nie pikselach) */
-.cam iframe{
-  position:absolute;
-  inset:0;                /* top:0; right:0; bottom:0; left:0 */
-  width:100%;
-  height:100%;
-  border:0;
-  transform-origin: top center;
-  transform: translateY(var(--crop-y)) scale(var(--crop-scale));
-  will-change: transform;
-  /* opcjonalnie: przycięcie w razie potrzeby
-     clip-path: inset(10% 0 0 0);
-  */
-}
-
-/* Przyciski i nakładka specjalnie dla pierwszej kamery */
-.audio-overlay{
-  position:absolute;
-  right:8px;
-  bottom:8px;
-  z-index:10;
-  background: rgba(0,0,0,0.6);
-  color:#fff;
-  padding:8px 10px;
-  border-radius:6px;
-  font-size:14px;
-  cursor:pointer;
-  border:0;
-}
-.audio-overlay:focus{outline:2px solid #fff; outline-offset:2px}
-
-/* Mobile: jeden pod drugim (wrapper już zawija; opcjonalne dostosowania) */
-@media (max-width:899px){
-  .wrapper{gap:10px; padding:0 6px}
-  .cam{min-width:100%; max-width:100%}
-}
-
-/* Duże ekrany: trzy obok siebie */
-@media (min-width:1200px){
-  .cam{flex-basis:32%}
-}
-</style>
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #cc0000;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
-  <main class="wrapper" id="cams">
-    <!--
-      Uwaga: używamy data-src (a nie src) aby mieć kontrolę nad momentem załadowania / przeładowania.
-      allow="autoplay" – konieczne, by przeglądarki zezwalały na automatyczne odtwarzanie (jeśli polityki na to pozwolą).
-    -->
 
-    <figure class="cam" data-id="1" aria-label="Kamera 1 - Sokół">
-      <iframe
-        id="cam1"
-        data-src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html"
-        title="Kamera 1 - Sokół"
-        allow="autoplay; fullscreen"
-        loading="eager"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-      <button class="audio-overlay" id="enableAudio" aria-pressed="false" title="Włącz dźwięk">Włącz dźwięk</button>
-    </figure>
+    <div class="container">
+        <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
 
-    <figure class="cam" data-id="2" aria-label="Kamera 2 - Sokół">
-      <iframe
-        id="cam2"
-        data-src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html"
-        title="Kamera 2 - Sokół"
-        allow="autoplay; fullscreen"
-        loading="eager"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </figure>
+    <div class="container">
+        <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
 
-    <figure class="cam" data-id="3" aria-label="Kamera 3 - Sokół">
-      <iframe
-        id="cam3"
-        data-src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html"
-        title="Kamera 3 - Sokół"
-        allow="autoplay; fullscreen"
-        loading="eager"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </figure>
-  </main>
+    <div class="container">
+        <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
 
-<script>
-/*
-  Logika:
-  - natychmiast ładujemy wszystkie iframey (ustawiamy src z data-src),
-    bo chcesz automatyczny podgląd z trzech kamer.
-  - dźwięk pierwszej kamery włączamy dopiero po kliknięciu przycisku "Włącz dźwięk".
-    Po kliknięciu przeładowujemy tylko pierwszy iframe (dodając timestamp query),
-    co daje przeglądarce sygnał: "była interakcja -> zezwól na autoplay audio".
-  - obsługa odporna na wielokrotne kliknięcia (debounce via state).
-  - lekkie zabezpieczenie: jeżeli iframe nie zezwala na audio nawet po reload, użytkownik
-    nadal musi włączyć dźwięk w samej ramce (jeżeli UI wewnątrz to pozwala).
-*/
+    <button class="refresh-btn" onclick="location.reload()">Odśwież kamery</button>
 
-(function(){
-  'use strict';
-
-  const frames = Array.from(document.querySelectorAll('iframe[data-src]'));
-  // Załaduj od razu wszystkie źródła (można zmienić na lazy jeśli chcesz oszczędzać przepustowość)
-  frames.forEach(f => {
-    // ustaw src z data-src - natychmiastowy load
-    f.src = f.dataset.src;
-  });
-
-  // Obsługa przycisku włączenia dźwięku (pierwsza kamera)
-  const btn = document.getElementById('enableAudio');
-  const cam1 = document.getElementById('cam1');
-  let audioEnabled = false;
-
-  function enableAudioForFirstCam(e){
-    if(audioEnabled) return;
-    audioEnabled = true;
-    btn.setAttribute('aria-pressed','true');
-    btn.textContent = 'Dźwięk włączony';
-    btn.disabled = true;
-
-    // Przeładuj iframe dodając timestamp, co daje przeglądarce "gesture" i wymusza start audio jeśli remote page ma autoplay unmuted.
-    // Jeśli remote nie ma autoplay albo ma wymóg dodatkowy, to i tak nic nie zrobimy z poziomu hosta.
-    const base = cam1.dataset.src;
-    const sep = base.includes('?') ? '&' : '?';
-    cam1.src = base + sep + 'ts=' + Date.now();
-
-    // Opcjonalny: zapisz w sessionStorage, żeby po reloadzie strony wiedzieć, że audio włączone
-    try { sessionStorage.setItem('sokoly_audio_enabled','1'); } catch(e){}
-  }
-
-  btn.addEventListener('click', enableAudioForFirstCam, { once:true, passive:true });
-
-  // Auto-restore: jeśli wcześniej w tej sesji włączono dźwięk, wczytaj od razu z timestampem
-  try {
-    if(sessionStorage.getItem('sokoly_audio_enabled') === '1'){
-      // symuluj kliknięcie - bez rzeczywistego eventu, ale wykonaj tę samą logikę
-      enableAudioForFirstCam();
-    }
-  } catch(e){ /* ignore storage errors */ }
-
-  // Dodatkowe uwagi (informacyjne, nie blokujące):
-  // - Nie próbujemy manipulować zawartością iframe (brak cross-origin access).
-  // - Jeżeli chcesz dodatkowych opcji: przycisk mute/unmute, separacja dźwięku każdej kamery, postMessage do ramki (jeśli wspiera),
-  //   mogę dodać to w kolejnym kroku.
-})();
-</script>
 </body>
 </html>
