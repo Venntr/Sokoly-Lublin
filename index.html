@@ -45,27 +45,34 @@
     <h1>Podgląd na żywo</h1>
 
     <div class="container">
+
         <div class="video-wrapper">
             <video id="video1" controls muted autoplay playsinline></video>
-            <div class="label">Kamera 1</div>
+            <div class="label">Bocisany w Rzepedzi</div>
+        </div>
+        
+        <div class="video-wrapper">
+            <video id="video1" controls muted autoplay playsinline></video>
+            <div class="label">Sokoły Lublin 1</div>
         </div>
 
         <div class="video-wrapper">
             <video id="video2" controls muted autoplay playsinline></video>
-            <div class="label">Kamera 2</div>
+            <div class="label">Sokoły Lublin 2</div>
         </div>
 
         <div class="video-wrapper">
             <video id="video3" controls muted autoplay playsinline></video>
-            <div class="label">Kamera 3</div>
+            <div class="label">Sokoły Lublin 3</div>
         </div>
     </div>
 
     <script>
         const streams = [
-            { id: 'video1', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8' },
-            { id: 'video2', url: 'https://sokoly.edu.pl/memfs/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.m3u8' },
-            { id: 'video3', url: 'https://sokoly.edu.pl/memfs/59499a3c-5b91-4713-be58-22aaebe60826.m3u8' }
+            { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
+            { id: 'video2', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8' },
+            { id: 'video3', url: 'https://sokoly.edu.pl/memfs/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.m3u8' },
+            { id: 'video4', url: 'https://sokoly.edu.pl/memfs/59499a3c-5b91-4713-be58-22aaebe60826.m3u8' }            
         ];
 
         streams.forEach(stream => {
