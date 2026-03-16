@@ -1,78 +1,28 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sokoły Lublin - Podgląd</title>
     <style>
-        body { 
-            margin: 0; 
-            padding: 5px; 
-            background-color: #f0f0f0; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px;
-            align-items: center;
-            font-family: sans-serif;
-        }
-
+        body { margin: 0; padding: 0; display: flex; flex-direction: column; background: #000; }
+        
+        /* Na komputerze wyświetlaj obok siebie */
         @media (min-width: 900px) {
-            body { flex-direction: row; flex-wrap: wrap; justify-content: center; padding-top: 40px; }
-            .container { width: 32vw; height: 18vw; }
+            body { flex-direction: row; flex-wrap: wrap; }
+            iframe { width: 33.33vw; height: 18.75vw; }
         }
 
+        /* Na telefonie jeden pod drugim */
         @media (max-width: 899px) {
-            .container { width: 100vw; height: 56.25vw; }
+            iframe { width: 100vw; height: 56.25vw; }
         }
 
-        .container { 
-            position: relative;
-            overflow: hidden;
-            border: 2px solid #333;
-            background: #000;
-            border-radius: 4px;
-        }
-
-        iframe { 
-            position: absolute;
-            top: -65px; /* Mniejsze wycięcie, by nie uciąć odtwarzacza */
-            left: 0;
-            width: 100%; 
-            height: calc(100% + 100px); 
-            border: none; 
-        }
-
-        .refresh-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #cc0000;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 100;
-        }
+        iframe { border: none; display: block; }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-
-    <div class="container">
-        <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-
-    <div class="container">
-        <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-
-    <button class="refresh-btn" onclick="location.reload()">Odśwież kamery</button>
-
+    <iframe src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html"></iframe>
+    <iframe src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html"></iframe>
+    <iframe src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html"></iframe>
 </body>
 </html>
