@@ -1,62 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-    margin:0;
-    padding:0;
-    display:flex;
-    flex-direction:column;
-    background:#000;
-}
-
-@media (min-width:900px){
-    body{
-        flex-direction:row;
-        flex-wrap:wrap;
-    }
-    iframe{
-        width:33.33vw;
-        height:18.75vw;
-    }
-}
-
-@media (max-width:899px){
-    iframe{
-        width:100vw;
-        height:56.25vw;
-    }
-}
-
-iframe{
-    border:none;
-    display:block;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podgląd Streamów</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            font-family: sans-serif;
+            color: white;
+        }
+        h1 { text-align: center; font-size: 1.5rem; }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .video-wrapper {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16 / 9;
+        }
+        .label {
+            padding: 10px;
+            background: #333;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
 </head>
-
 <body>
 
-<iframe
-src="https://sokoly.edu.pl/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.html"
-sandbox="allow-scripts allow-presentation"
-allow="autoplay; fullscreen">
-</iframe>
+    <h1>Podgląd na żywo</h1>
 
-<iframe
-src="https://sokoly.edu.pl/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.html"
-sandbox="allow-scripts allow-presentation"
-allow="autoplay; fullscreen">
-</iframe>
+    <div class="container">
+        <div class="video-wrapper">
+            <video id="video1" controls muted autoplay playsinline></video>
+            <div class="label">Kamera 1</div>
+        </div>
 
-<iframe
-src="https://sokoly.edu.pl/59499a3c-5b91-4713-be58-22aaebe60826.html"
-sandbox="allow-scripts allow-presentation"
-allow="autoplay; fullscreen">
-</iframe>
+        <div class="video-wrapper">
+            <video id="video2" controls muted autoplay playsinline></video>
+            <div class="label">Kamera 2</div>
+        </div>
 
+        <div class="video-wrapper">
+            <video id="video3" controls muted autoplay playsinline></video>
+            <div class="label">Kamera 3</div>
+        </div>
+    </div>
+
+    <script>
+        const streams = [
+            { id: 'video1', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8' },
+            { id: 'video2', url: 'https://sokoly.edu.pl/memfs/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.m3u8' },
+            { id: 'video3', url: 'https://sokoly.edu.pl/memfs/59499a3c-5b91-4713-be58-22aaebe60826.m3u8' }
+        ];
+
+        streams.forEach(stream => {
+            const video = document.getElementById(stream.id);
+            
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(stream.url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } 
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Dla Safari (iOS/Mac), które wspiera HLS natywnie
+                video.src = stream.url;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
