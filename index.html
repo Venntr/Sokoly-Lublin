@@ -26,14 +26,11 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
         }
-        video, iframe {
+        video {
             width: 100%;
             display: block;
             aspect-ratio: 16 / 9;
-            border: none;
         }
         .label {
             padding: 10px;
@@ -48,6 +45,7 @@
     <h1>Podgląd na żywo</h1>
 
     <div class="container">
+
         <div class="video-wrapper">
             <video id="video1" controls muted autoplay playsinline></video>
             <div class="label">Bociany w Rzepedzi</div>
@@ -67,19 +65,9 @@
             <video id="video4" controls muted autoplay playsinline></video>
             <div class="label">Sokoły Lublin 3</div>
         </div>
-
-        <div class="video-wrapper">
-            <iframe 
-                src="https://precate.pl/player/?src=rybbar/cam1" 
-                allow="autoplay; fullscreen" 
-                allowfullscreen>
-            </iframe>
-            <div class="label">Rybołowy Barlinek</div>
-        </div>
     </div>
 
     <script>
-        // Lista strumieni (bez ostatniej kamery, bo ona działa przez iframe)
         const streams = [
             { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
             { id: 'video2', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8' },
@@ -89,17 +77,17 @@
 
         streams.forEach(stream => {
             const video = document.getElementById(stream.id);
-            if (!video) return;
-
+            
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(stream.url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Autoplay wymaga interakcji"));
+                    video.play();
                 });
             } 
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Dla Safari (iOS/Mac), które wspiera HLS natywnie
                 video.src = stream.url;
                 video.addEventListener('loadedmetadata', function() {
                     video.play();
