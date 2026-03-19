@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ptaki na żywo</title>
+    <title>Ptaki i Miasto na żywo</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body {
@@ -16,7 +16,7 @@
         h1 { text-align: center; font-size: 1.5rem; }
         .container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px;
             max-width: 1400px;
             margin: 0 auto;
@@ -26,11 +26,20 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         }
-        video {
+        /* Zapewnia stałe proporcje dla video i iframe */
+        .media-container {
+            position: relative;
             width: 100%;
-            display: block;
             aspect-ratio: 16 / 9;
+        }
+        video, iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
         }
         .label {
             padding: 10px;
@@ -44,54 +53,75 @@
 
     <h1>Podgląd na żywo</h1>
 
-    <div class="container">
-
-        <div class="video-wrapper">
-            <video id="video1" controls muted autoplay playsinline></video>
-            <div class="label">Bociany w Rzepedzi</div>
+    <div class="container" id="main-container">
         </div>
-        
-        <div class="video-wrapper">
-            <video id="video2" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 1</div>
-        </div>
-
-        <div class="video-wrapper">
-            <video id="video3" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 2</div>
-        </div>
-
-        <div class="video-wrapper">
-            <video id="video4" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 3</div>
-        </div>
-    </div>
 
     <script>
         const streams = [
-            { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
-            { id: 'video2', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8' },
-            { id: 'video3', url: 'https://sokoly.edu.pl/memfs/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.m3u8' },
-            { id: 'video4', url: 'https://sokoly.edu.pl/memfs/59499a3c-5b91-4713-be58-22aaebe60826.m3u8' }            
+            { label: 'Bociany w Rzepedzi', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8', backup: null },
+            { label: 'Sokoły Lublin 1', url: 'https://sokoly.edu.pl/memfs/c0b4918a-13d8-4ecb-b9b3-812e7476a8b7.m3u8', backup: null },
+            { label: 'Sokoły Lublin 2', url: 'https://sokoly.edu.pl/memfs/0635c8f5-1d42-40f9-8fbd-0a3d335e55d2.m3u8', backup: null },
+            { label: 'Sokoły Lublin 3', url: 'https://sokoly.edu.pl/memfs/59499a3c-5b91-4713-be58-22aaebe60826.m3u8', backup: null },
+            { 
+                label: 'Lublin: Krakowskie Przedmieście', 
+                url: 'https://s1.webcamera.pl/lublin_krakowskie_przedmiescie/lublin_krakowskie_przedmiescie.stream/playlist.m3u8',
+                backup: 'https://go.webcamera.pl/lublin_krakowskie_przedmiescie' // Link do iframe
+            }            
         ];
 
-        streams.forEach(stream => {
-            const video = document.getElementById(stream.id);
+        const container = document.getElementById('main-container');
+
+        streams.forEach((stream, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'video-wrapper';
             
+            const mediaContainer = document.createElement('div');
+            mediaContainer.className = 'media-container';
+            mediaContainer.id = `media-ctx-${index}`;
+
+            const video = document.createElement('video');
+            video.id = `video-${index}`;
+            video.controls = true;
+            video.muted = true;
+            video.autoplay = true;
+            video.setAttribute('playsinline', '');
+
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.innerText = stream.label;
+
+            mediaContainer.appendChild(video);
+            wrapper.appendChild(mediaContainer);
+            wrapper.appendChild(label);
+            container.appendChild(wrapper);
+
+            // Funkcja przełączająca na backup (iframe)
+            const switchToBackup = () => {
+                if (stream.backup) {
+                    console.warn(`Przełączanie na backup dla: ${stream.label}`);
+                    mediaContainer.innerHTML = `<iframe src="${stream.backup}" scrolling="no" allowfullscreen></iframe>`;
+                }
+            };
+
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                const hls = new Hls({
+                    manifestLoadingTimeOut: 5000,
+                    fragLoadingTimeOut: 5000
+                });
                 hls.loadSource(stream.url);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
+                
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        // Jeśli błąd jest krytyczny (np. CORS lub 404), użyj backupu
+                        switchToBackup();
+                        hls.destroy();
+                    }
                 });
             } 
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Dla Safari (iOS/Mac), które wspiera HLS natywnie
                 video.src = stream.url;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
+                video.addEventListener('error', switchToBackup);
             }
         });
     </script>
