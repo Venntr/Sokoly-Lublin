@@ -32,6 +32,12 @@
             display: block;
             aspect-ratio: 16 / 9;
         }
+        iframe {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16 / 9;
+            border: none;
+        }
         .label {
             padding: 10px;
             background: #333;
@@ -41,11 +47,8 @@
     </style>
 </head>
 <body>
-
     <h1>Podgląd na żywo</h1>
-
     <div class="container">
-
         <div class="video-wrapper">
             <video id="video1" controls muted autoplay playsinline></video>
             <div class="label">Bociany w Rzepedzi</div>
@@ -55,18 +58,24 @@
             <video id="video2" controls muted autoplay playsinline></video>
             <div class="label">Sokoły Lublin 1</div>
         </div>
-
         <div class="video-wrapper">
             <video id="video3" controls muted autoplay playsinline></video>
             <div class="label">Sokoły Lublin 2</div>
         </div>
-
         <div class="video-wrapper">
             <video id="video4" controls muted autoplay playsinline></video>
             <div class="label">Sokoły Lublin 3</div>
         </div>
-    </div>
 
+        <div class="video-wrapper">
+            <iframe
+                src="https://www.youtube.com/embed/WBUBbFgiOJM?autoplay=1&mute=1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+            <div class="label">Bociany Czarne Bolewice</div>
+        </div>
+    </div>
     <script>
         const streams = [
             { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
@@ -74,7 +83,6 @@
             { id: 'video3', url: 'https://sokoly.ovh/memfs/35360187-5beb-466d-b0f3-3df0d45a0c1c.m3u8' },
             { id: 'video4', url: 'https://sokoly.ovh/memfs/eded79f7-aae7-4a81-b1fc-f99868cf52ce.m3u8' }            
         ];
-
         streams.forEach(stream => {
             const video = document.getElementById(stream.id);
             
@@ -87,7 +95,6 @@
                 });
             } 
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Dla Safari (iOS/Mac), które wspiera HLS natywnie
                 video.src = stream.url;
                 video.addEventListener('loadedmetadata', function() {
                     video.play();
