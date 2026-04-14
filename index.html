@@ -29,7 +29,7 @@
             display: flex;
             flex-direction: column;
         }
-        video, iframe, .mjpeg-stream {
+        video, iframe, img {
             width: 100%;
             display: block;
             aspect-ratio: 16 / 9;
@@ -49,53 +49,48 @@
     <div class="container">
         <div class="video-wrapper">
             <video id="video1" controls muted autoplay playsinline></video>
-            <div class="label">Bociany w Rzepedzi</div>
+            <div class="label">🦢 Bociany w Rzepedzi</div>
         </div>
         <div class="video-wrapper">
             <video id="video2" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 1</div>
+            <div class="label">🦅 Sokoły Lublin 1</div>
         </div>
         <div class="video-wrapper">
             <video id="video3" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 2</div>
+            <div class="label">🦅 Sokoły Lublin 2</div>
         </div>
         <div class="video-wrapper">
             <video id="video4" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Lublin 3</div>
+            <div class="label">🦅 Sokoły Lublin 3</div>
         </div>
         <div class="video-wrapper">
             <video id="video5" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Trzebież 1</div>
+            <div class="label">🦅 Sokoły Trzebież 1</div>
         </div>
         <div class="video-wrapper">
             <video id="video6" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Trzebież 2</div>
+            <div class="label">🦅 Sokoły Trzebież 2</div>
         </div>
         <div class="video-wrapper">
             <video id="video7" controls muted autoplay playsinline></video>
-            <div class="label">Sokoły Dolina Baryczy</div>
+            <div class="label">🦅 Sokoły Dolina Baryczy</div>
+        </div>
+
+        <div class="video-wrapper">
+            <img src="http://live.uci.agh.edu.pl/video/stream5.cgi" alt="Brak podglądu (blokada HTTP)">
+            <div class="label">🦅 Sokoły AGH Kraków</div>
+        </div>
+
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/ZSdTJ3Drcz8?autoplay=1&mute=1" allowfullscreen></iframe>
+            <div class="label">🦢 Bociany Polanów</div>
         </div>
         <div class="video-wrapper">
-            <iframe
-                src="https://www.youtube.com/embed/ZSdTJ3Drcz8?autoplay=1&mute=1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-            <div class="label">Bociany Polanów</div>
-        </div>
-        <div class="video-wrapper">
-            <iframe
-                src="https://www.youtube.com/embed/WBUBbFgiOJM?autoplay=1&mute=1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-            <div class="label">Bociany Czarne Bolewice</div>
+            <iframe src="https://www.youtube.com/embed/WBUBbFgiOJM?autoplay=1&mute=1" allowfullscreen></iframe>
+            <div class="label">🦢 Bociany Czarne Bolewice</div>
         </div>
     </div>
-      <div class="video-wrapper">
-            <img src="http://live.uci.agh.edu.pl/video/stream5.cgi" class="mjpeg-stream" alt="Stream AGH">
-            <div class="label">Pustułki AGH Kraków</div>
-        </div>
+
     <script>
         const streams = [
             { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
@@ -113,15 +108,9 @@
                 const hls = new Hls();
                 hls.loadSource(stream.url);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                });
-            } 
-            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = stream.url;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
             }
         });
     </script>
