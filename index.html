@@ -26,16 +26,14 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         }
-        video {
+        video, iframe, .mjpeg-stream {
             width: 100%;
             display: block;
             aspect-ratio: 16 / 9;
-        }
-        iframe {
-            width: 100%;
-            display: block;
-            aspect-ratio: 16 / 9;
+            object-fit: cover;
             border: none;
         }
         .label {
@@ -53,7 +51,6 @@
             <video id="video1" controls muted autoplay playsinline></video>
             <div class="label">Bociany w Rzepedzi</div>
         </div>
-        
         <div class="video-wrapper">
             <video id="video2" controls muted autoplay playsinline></video>
             <div class="label">Sokoły Lublin 1</div>
@@ -95,6 +92,10 @@
             <div class="label">Bociany Czarne Bolewice</div>
         </div>
     </div>
+      <div class="video-wrapper">
+            <img src="http://live.uci.agh.edu.pl/video/stream5.cgi" class="mjpeg-stream" alt="Stream AGH">
+            <div class="label">Pustułki AGH Kraków</div>
+        </div>
     <script>
         const streams = [
             { id: 'video1', url: 'https://stream4.stimotion.pl/live/bocian1.m3u8' },
@@ -105,9 +106,9 @@
             { id: 'video6', url: 'https://7004.szczecin.pl/Lasam/streams/lasstream2.m3u8'},
             { id: 'video7', url: 'https://7004.szczecin.pl/pgetorun/streams/milicz.m3u8'}
         ];
+
         streams.forEach(stream => {
             const video = document.getElementById(stream.id);
-            
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(stream.url);
